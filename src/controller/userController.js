@@ -5,7 +5,7 @@ const { Op } = require("sequelize");
 const moment = require('moment');
 const {	validationResult } = require('express-validator');
 const bcryptjs = require('bcryptjs');
-
+const sequelize = models.sequelize;
 
 // Funcionalidad userController
 const userController = {
@@ -29,7 +29,7 @@ const userController = {
             }
             // console.log(req.body.email);
             
-            let userInDB = await db.User.findOne({where: {email: req.body.email}})
+            let userInDB = await models.User.findOne({where: {email: req.body.email}})
             // console.log(userInDB);
            
     
@@ -47,7 +47,8 @@ const userController = {
             let userToCreate = {
                 ...req.body,
                 password: bcryptjs.hashSync(req.body.password, 10),
-                name: req.body.name,
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
                 address: req.body.address,
                 avatar: req.body.avatar,
                 email: req.body.email              
@@ -55,10 +56,10 @@ const userController = {
             }
             console.log(`USUARIO POR CREARSE: ${userToCreate}`);
     
-            let userCreated = await db.User.create(userToCreate);
+            let userCreated = await models.User.create(userToCreate);
             console.log(`USUARIO CREADO ${userCreated}`)
     
-            return res.redirect('/user/login');
+            return res.redirect('/login');
         }
         catch(error){
             console.log(error);
@@ -76,7 +77,7 @@ const userController = {
     // Login (POST) - Session de usuario
     loginProcess: async (req, res) => {
         try{
-          let userToLogin = await db.User.findOne({where: {email: req.body.email}})
+          let userToLogin = await models.User.findOne({where: {email: req.body.email}})
         // console.log(userTologin);
         if (userToLogin) {
             let isOkThePassword = bcryptjs.compareSync(req.body.password, userToLogin.password);
@@ -88,7 +89,7 @@ const userController = {
                     res.cookie('email', req.body.email, { maxAge: (1000 * 60) * 60 })
                 }
 
-                return res.redirect('/user/profile');
+                return res.redirect('/profile');
             }
             return res.render('login', {
                 errors: {
@@ -134,7 +135,8 @@ const userController = {
     update: (req, res) => {
         models.User
             .update({
-                name: req.body.name,
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
                 address: req.body.address,
                 avatar: req.body.avatar,
                 email: req.body.email,

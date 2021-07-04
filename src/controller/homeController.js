@@ -12,7 +12,7 @@ let homeController = {
             });
 
             console.log(products);
-            return res.render('index', {products});
+            return res.render('home', {products});
         }
         catch(error){
             console.log(error);
