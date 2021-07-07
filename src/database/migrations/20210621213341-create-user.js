@@ -20,19 +20,14 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
-      avatars_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'avatars',
-          key: 'id'
-        }
+      avatar: {
+        type: Sequelize.STRING
       },
-      adresses_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'adresses',
-          key: 'id'
-        }
+      admin: {
+        type: Sequelize.TINYINT
+      },
+      adress: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

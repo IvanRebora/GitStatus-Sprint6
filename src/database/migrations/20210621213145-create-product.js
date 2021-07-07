@@ -8,17 +8,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+     
       name: {
         type: Sequelize.STRING
       },
       price: {
         type: Sequelize.DECIMAL
-      },
-      stock_min: {
-        type: Sequelize.INTEGER
-      },
-      stock_max: {
-        type: Sequelize.INTEGER
       },
       discount: {
         type: Sequelize.INTEGER
@@ -26,14 +21,10 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
-      brands_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'brands',
-          key: 'id'
-        }
+      brand: {
+        type: Sequelize.STRING
       },
-      categories_id: {
+      category_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'categories',

@@ -1,171 +1,125 @@
-
-const path = require('path');
-const models = require('../database/models');
-const { Op } = require("sequelize");
-const moment = require('moment');
-const {	validationResult } = require('express-validator');
 const bcryptjs = require('bcryptjs');
-const sequelize = models.sequelize;
+const { Op } = require("sequelize");
+const {User, Image, Product} = require('../database/models');
+const {
+	validationResult
+} = require('express-validator');
 
-// Funcionalidad userController
-const userController = {
-    
-    // Registro (GET)
+let usersController = {
     register: (req, res) => {
-        res.render('register');
-    },
+    return res.render ('register')
+  },
+
+    profile: async (req, res) => {
+        console.log(req.session.userLogged);
+        let user = await User.findByPk(req.session.userLogged.id)
+        console.log(user);
+        res.render ('profile', {user})
+      },
+      
 
 
 
     processRegister: async (req, res) => {
-        try{
-            const resultValidation = validationResult(req);
-
-            if (resultValidation.errors.length > 0) {
-                return res.render('register', {
-                    errors: resultValidation.mapped(),
-                    oldData: req.body
-                });
-            }
-            // console.log(req.body.email);
-            
-            let userInDB = await models.User.findOne({where: {email: req.body.email}})
-            // console.log(userInDB);
-           
-    
-            if (userInDB) {
-                return res.render('register', {
-                    errors: {
-                        email: {
-                            msg: 'Este email ya está registrado'
-                        }
-                    },
-                    oldData: req.body
-                });
-            }
-    
-            let userToCreate = {
-                ...req.body,
-                password: bcryptjs.hashSync(req.body.password, 10),
-                first_name: req.body.first_name,
-                last_name: req.body.last_name,
-                address: req.body.address,
-                avatar: req.body.avatar,
-                email: req.body.email              
-
-            }
-            console.log(`USUARIO POR CREARSE: ${userToCreate}`);
-    
-            let userCreated = await models.User.create(userToCreate);
-            console.log(`USUARIO CREADO ${userCreated}`)
-    
-            return res.redirect('/login');
-        }
-        catch(error){
-            console.log(error);
-        }
+        const resulValidation = validationResult (req);
+        console.log(req.body);
+        if (resulValidation.errors.length > 0 ){
+            return res.render ('register',{
+            errors: resulValidation.mapped(),
+            oldData: req.body,
         
-    },
+    });
+    }
+   
+        let user = await User.create({
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            email: req.body.email,
+            adress: req.body.adress,
+            avatar: req.file ? req.file.filename :'avatar.jpg',
+            password: bcryptjs.hashSync(req.body.password, 10)
+        })
+        !req.session.userLogged ? req.session.userLogged = user : "";
+        
+        res.redirect ('/profile')
+       
+},
 
-    
+login: (req, res) => {
+    console.log('ingreso login');
+    res.render('login')
+}, 
 
-    // Login (GET)    
-    login: (req, res) => {
-        res.render('login')
-    },
-
-    // Login (POST) - Session de usuario
-    loginProcess: async (req, res) => {
-        try{
-          let userToLogin = await models.User.findOne({where: {email: req.body.email}})
-        // console.log(userTologin);
-        if (userToLogin) {
-            let isOkThePassword = bcryptjs.compareSync(req.body.password, userToLogin.password);
-            if (isOkThePassword) {
-                delete userToLogin.password;
-                req.session.userLogged = userToLogin;
-
-                if (req.body.remember_user) {
-                    res.cookie('email', req.body.email, { maxAge: (1000 * 60) * 60 })
-                }
-
-                return res.redirect('/profile');
+loginProcess: async (req, res) => {
+        
+        let userToLogin = await User.findOne({
+            where: {
+                email : req.body.email
             }
-            return res.render('login', {
+        })
+        console.log(userToLogin);
+        if (userToLogin) {
+
+            let isPasswordOk = bcryptjs.compareSync(req.body.password, userToLogin.password)
+            if (isPasswordOk) {
+                
+                req.session.userLogged = userToLogin
+                if(req.body.recordatorio){
+                    res.cookie('userEmail', req.body.email, { maxAge: 1000 * 60})
+                    console.log('hay cookie');
+                    //console.log(req.cookies.userEmail);
+                }
+                
+                return res.redirect('/profile')
+            }
+            return res.render( "login", {
                 errors: {
                     email: {
-                        msg: 'Las credenciales son inválidas'
+                        msg: "Las credenciales son inválidas"
                     }
                 }
-            });  
+            })
         }
 
-        return res.render('login', {
+
+         return res.render( "login", {
             errors: {
                 email: {
-                    msg: 'No se encuentra este email en nuestra base de datos'
+                    msg: "No esta registrado este mail"
                 }
             }
-        });
-        
-        }
-        catch(error){
-            console.log(error);
-        }
-
-        
+        })
     },
-
-
-    detail: (req, res) => {
-        models.User
-            .findByPk(req.params.id)
-            .then(user => {
-                res.render('profile.ejs', {user})
-            })
+    edit: async (req, res)=> {
+        let user = await User.findByPk(req.session.userLogged.id);
+        res.render('profile', {user})
     },
+    update: async (req, res)=> {
 
-    edit: (req, res) => {
-        Promise
-        .all(User.findByPk(req.params.id))
-        .then((user) => {
-            return res.render(path.resolve(__dirname, '..', 'views',  'profile'), {user})})
-        .catch(error => res.send(error))
-    },
-    update: (req, res) => {
-        models.User
-            .update({
-                first_name: req.body.first_name,
-                last_name: req.body.last_name,
-                address: req.body.address,
-                avatar: req.body.avatar,
-                email: req.body.email,
-                password: req.body.password
-                }, {
-                where: {
-                    id: req.params.id,
-                }
-            })
-            .then(user => {
-                return res.status(200).json({
-                    data: user,
-                    status: 200,
-                    updated: 'Ok'
-                })
-            })
-    },
-    profile: (req, res) => {
-        res.render('profile', {
-            user: req.session.userLogged
-        });
+        let user = await User.update({
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            email: req.body.email,
+            adress: req.body.adress,
+            avatar: req.file ? req.file.filename :req.session.userLogged.avatar
+           
 
+        },
+        {
+            where: {id: req.session.userLogged.id}
+        })
+        res.redirect('/profile')
     },
-
-    logout: (req,res) => {
-        res.clearCookie('userEmail');
+    logout: (req, res) => {
+        console.log("eNTRE EN LOGAOUT");
         req.session.destroy();
         return res.redirect('/');
     }
-};
 
-module.exports = userController;
+
+
+}
+
+
+
+module.exports = usersController;

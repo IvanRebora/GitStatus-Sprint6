@@ -3,30 +3,34 @@ const router = express.Router();
 const controller = require('../controller/userController');
 
 // Middlewares
-const uploadFile = require('../middlewares/multerMiddleware'); 
-const formValidations = require('../middlewares/validateRegisterMiddleware');
-const profileValidations = require('../middlewares/validateProfileMiddleware');
+
+
+
 const guestMiddleware = require('../middlewares/guestMiddleware');
 const authMiddleware = require('../middlewares/authMiddleware');
+const userValidation = require ('../middlewares/userValidate');
+const uploadFile = require('../middlewares/multerMiddleware');
 
+// Formulario de registro
+router.get('/register', guestMiddleware, controller.register);
 
+// Procesar el registro
+router.post('/register', uploadFile.single('avatar'), controller.processRegister);
 
+// Formulario de login
+router.get('/login', guestMiddleware, controller.login);
 
-
-router.get('/login',guestMiddleware, controller.login);
-
+// Procesar de login
 router.post('/login', controller.loginProcess);
 
+// Perfil del usuario
+router.get('/profile', authMiddleware, controller.profile);
 
+//Logout
+router.get('/logout', controller.logout);
 
-// Logout
-router.get('/logout/', controller.logout);
-
-router.get('/profle/:id', authMiddleware, controller.detail)
-router.get('/register', guestMiddleware, controller.register)
-router.post('/register/create',  uploadFile.single('avatar'), formValidations, controller.processRegister)
-router.get('/profile/edit/:id', controller.edit)
-router.put('/profile/edit/:id', authMiddleware, uploadFile.single('avatar') ,profileValidations , controller.update)
-
+//edición Profile
+router.get ('/profile',authMiddleware, controller.edit);
+router.put ('/profile', uploadFile.single('avatar'), controller.update)
 
 module.exports = router;

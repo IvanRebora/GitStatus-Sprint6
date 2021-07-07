@@ -35,8 +35,8 @@
                 </li>
 
                 <% if (locals.isLogged) { %>
-                    <li><a href="/profile">Hola <%= locals.userLogged.name %>!</a></li><br>
-                    <img src="/images/avatars/<%= locals.userLogged.fileavatar %>" alt="Imagen de usuario" width="30px" height="30px">
+                    <li><a href="/profile">Hola <%= locals.userLogged.first_name %>!</a></li><br>
+                    <img src="/images/avatars/<%= locals.userLogged.avatar %>" alt="Imagen de usuario" width="30px" height="30px">
                     <li>
 
                         <a href="/products/create">

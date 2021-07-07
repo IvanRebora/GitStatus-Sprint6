@@ -14,7 +14,7 @@
         <section class="productDescription">
             <div class="producto">
                 <p class="nameProd"><%= product.name %></p>
-                <p class="marca"><%= product.retailer %></p>
+                <p class="marca"><%= product.brand %></p>
             </div>
             <div class="fotos">
                 <img src="/images/<%= product.image %>" width="24%" class="principalImg" alt="3">
@@ -36,7 +36,7 @@
     <form class="form is-inline" action="/products/<%= product.id %>?_method=DELETE" method="POST">
         <button type="submit" class="button is-danger">Borrar</button>
     </form>
-    <a href="/products/<%= product.id %>/edit" class="button is-success">Editar</a>
+    <a href="/products/edit/<%= product.id %>" class="button is-success">Editar</a>
 
 
 

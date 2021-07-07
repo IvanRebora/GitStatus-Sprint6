@@ -1,137 +1,306 @@
-//let productos = require('../data/productsData');
-
-const path = require('path');
-const DB = require('../database/models');
+/*const db = require('../database/models');
+const sequelize = db.sequelize;
 const { Op } = require("sequelize");
-const moment = require('moment');
 
-//const jsonDB = require('../model/jsonDatabase');
+const Products = db.Product;
+const Images = db.Image;
+const Brands = db.Brand;
 
-//const productModel = jsonDB('products');
 
 let productController = {
-
-    list: (req, res) => {
-        DB.Product
-            .findAll()
-            .then(products => {
-                res.render('home.ejs', {products})
-            })
-    },
     cart: (req, res) => {
         res.render('cart');
     },
+    create: (req, res) => {
+        res.render('createProd')
+    },
+    readAll: async (req, res) => {
+        try{
+            let products = await Products.findAll({
+                include: ["Brand", "Image"]
+            });
+            res.render('/', { products });
+        }catch(error){
+            console.log(error);
+            return res.status(500);
+        }
 
+    },
+
+    readProduct: async (req, res) => {
+        try {
+            const product = await Products.findByPk(req.params.id, {include: ["Brand", "Image"]});
+                console.log(product)
+
+            
+            if (product) {
+                res.render('productDesc', { product});
+            } else {
+                res.render('error404');
+            }
+        } catch (error) {
+            console.log(error);
+            return res.status(500);
+        }
+
+
+
+        // const categoryProducts = productModel.findAllByField("categoria", product.categoria);
+/*      Filtraría los productos pero se rompe cuando solamente existe uno de una categoría.
+        const filteredProducts = productModel.findAllByField("categoria", product.categoria);
+        let categoryProducts = [];
+        for (let i = 0; i < 4; i++) {
+            categoryProducts.push(filteredProducts[i]);
+        }  
+
+    },
+
+    createProduct: async (req, res) => {
+        try {
+            let brands = await Brands.findAll();
+
+            res.render('createProd', {brands});
+        } catch (error) {
+            console.log(error);
+            return res.status(500); 
+        }
+
+    },
+
+    recieveForm: async (req, res) => {
+        try {
+            const product = req.body;
+
+            product.image = req.file ? req.file.filename : '';
+
+            let productoCreado = await Products.create(product);
+            console.log("se creo el producto");
     
+            let productImage = await Images.create({
+                name: product.image, 
+                products_id: productoCreado.id
+            });
+            res.redirect('/')
+        } catch (error) {
+            console.log(error);
+            return res.status(500);
+        }
 
-
-        add: (req, res) => {
-            Promise
-                .all(Product.findAll())
-                .then((allProducts) => {
-                    return res.render(path.resolve(__dirname, '..', 'views', 'createProduct'), {allProducts})
-                })
-                .catch(error => res.send(error))
-        },
-        create: (req, res) => {
-            DB.Product
-                .create({
-                    name: req.body.name,
-                    description: req.body.description,
-                    price: req.body.price,
-                    discount: req.body.discount,
-                    image: req.body.image,
-                    stock_min: req.body.stock_min,
-                    stock_max: req.body.stock_max,
-                    brands_id: req.body.brands_id,
-                    categories_id: req.body.categories_id
-                    })
-                .then(product => {
-                    return res.status(200).json({
-                        data: product,
-                        status: 200,
-                        created: 'Ok'
-                    })
-                })
-                .catch(error => res.send(error))
-        },
-
-
-    detail: (req, res) => {
-        DB.Product
-            .findByPk(req.params.id)
-            .then(product => {
-                res.render('productDesc.ejs', {product})
-            })
-    },
-    
-    edit: (req, res) => {
-        Promise
-        .all(Product.findByPk(req.params.id))
-        .then((product) => {
-            return res.render(path.resolve(__dirname, '..', 'views',  'editProduct'), {product})})
-        .catch(error => res.send(error))
     },
 
-
-    update: (req, res) => {
-        DB.Product
-            .update({
-                name: req.body.name,
-                description: req.body.description,
-                price: req.body.price,
-                    discount: req.body.discount,
-                    image: req.body.image,
-                    stock_min: req.body.stock_min,
-                    stock_max: req.body.stock_max,
-                    brands_id: req.body.brands_id,
-                    categories_id: req.body.categories_id
-                }, {
-                where: {
-                    id: req.params.id
-                }
-            })
-            .then(product => {
-                return res.status(200).json({
-                    data: product,
-                    status: 200,
-                    updated: 'Ok'
-                })
-            })
-            .catch(error => res.send(error))
-    },
-    
-
-    delete: (req, res) => {
-        DB.Product
-            .destroy({
-                where: {
-                    id: req.params.id
-                }
-            })
-            .then((response) => {
-                return res.redirect('/')
-            })
-            .catch(error => res.send(error))
+    modifyProduct: async (req, res) => {
+        try {
+            const product = await Products.findOne({
+                where: {id : req.params.id}, 
+                include: ["Brand", "Image"]
+            });
+            const productBrands = await Brands.findAll();
+            const productImages = await Images.findOne({where: {productId: product.id}});
+            res.render('productDesc', { 
+                product, 
+                productBrands, 
+                productImages
+             });
+        } catch (error) {
+            console.log(error);
+            return res.status(500);
+        }
     },
 
-    search: (req, res) => {
-        DB.Product
-            .findAll({
-                where: {
-                    name: { [Op.like] : '%' + req.query.keyword + '%' }
-                }
-            })
-            .then(products => {
-                if(products.length > 0) {
-                    return res.status(200).json(products)
-                }
-                return res.status(200).json('El producto que busca no ha sido encontrado')
-            })
+    modifyForm: async (req, res) => {
+        try {
+            let product = req.body;
+            product.image = req.file ? req.file.filename : req.body.oldImagen;
+            if (req.body.image === undefined) {
+                product.image = product.oldImagen
+            };
+            delete product.oldImagen;
+            let updatedProduct = await Products.update({ 
+                name: product.name,
+                price: product.price,
+                stock_min: product.stock_min,
+                stock_max: product.stock_max,
+                discount: product.discount,
+                description: product.description,
+                brands_id: product.brands_id,
+                categories_id: product.categories_id
+            },
+                {where: { id: req.params.id }});
+
+            let productImage = await Images.update({
+                name: product.image
+            },
+                {where: {productId: req.params.id}});
+
+            res.redirect('/productDesc' + req.params.id);
+        } catch (error) {
+            console.log(error);
+            return res.status(500);
+        }
+    },
+
+    deleteProduct: async (req, res) => {
+
+        let deletedProduct = await Products.destroy({where: {id : req.params.id}});
+      
+        res.redirect('/')
     }
 
 
+   
+    }
 
+module.exports = productController;*/
+
+const db = require('../database/models');
+const sequelize = db.sequelize;
+const { Op } = require("sequelize");
+const {Category,  Image, Product, Users} = require('../database/models');
+const {	validationResult } = require('express-validator');
+const imageController = require('./imageController');
+
+
+let productController = {
+    list: (req, res) => {
+        db.Product.findAll(
+            {include:['category', 'user', 'image']}
+            
+        )
+        .then(productos => {
+            return res.render('/', {productos})})
+           /*console.log(propertys);
+            let respuesta = {
+                meta: {
+                    status:200,
+                    total: propertys.length
+                },
+                data: propertys
+
+          
+            
+            
+            //res.json(respuesta);
+        });*/
+       
+       },
+    cart: (req, res) => {
+        res.render('cart');
+    },
+    create: (req, res) => {
+        res.render('createProd')
+    },
+    store: async (req, res) => {
+        const validations = validationResult(req);
+        if (validations.errors.length > 0) {
+             return res.render ('createProd',{
+                errors: validations.mapped(),
+                oldData: req.body,
+            });
+        }
+
+        // console.log(req.body);
+        // console.log('------------------------------');
+
+        let newProduct = await Product.create({
+      
+            name: req.body.name,
+            price: req.body.price,
+            discount: req.body.discount,
+            description: req.body.description,
+            brand: req.body.brand,
+            categories_id: req.body.category
+        });
+
+
+        let imagesFiles = [];
+        let nameImage = '';
+        for (let i = 0; i < 3; i++) {
+            if (i==0) nameImage = req.files.image[0] ? req.files.image[0].filename : '.jpg';
+            if (i==1) nameImage = req.files.image[0] ? req.files.image[0].filename : '.jpg';
+            if (i==2) nameImage = req.files.image[0] ? req.files.image[0].filename : '.jpg';
+            imagesFiles.push({
+                name: nameImage
+            })
+        }
+
+        let images = imageController.bulkCreate(newProduct.id, imagesFiles);
+        
+        let user = req.session.userLogged;
+        let producto = await Product.findByPk(newProduct.id, 
+            {include:['image', 'category']});
+        res.render('productDesc', {producto});
+   
+    },     
+    detalleCrud: async (req, res) => {
+        let producto = await Product.findByPk(req.params.id, 
+            {include:['image', 'category']});
+
+        let user = req.session.userLogged;
+        
+        if (producto) {
+            res.render('productDesc', {producto});
+        } else {
+            res.render('error404');
+        }
+    },
+    edit: async (req, res) => {
+        let productId = req.params.id;
+        let product = await Product.findByPk(productId, {include: ['image']});
+
+
+        if ( product ) {
+            res.render('editProd', {product});
+        }
+
+    },
+    update: async (req,res) => {
+        let productId = req.params.id;
+
+        console.log('--------------------------------------------');
+        console.log(req.body);
+        console.log('--------------------------------------------');
+
+        let productUpdated = await Product.update({
+            name: req.body.name,
+            price: req.body.price,
+            discount: req.body.discount,
+            description: req.body.description,
+            brand: req.body.brand,
+            categories_id: req.body.category
+        },{
+            where: {id: productId}
+        });
+
+        //Edición de las imágenes
+        let imagesFiles = [];
+        // console.log(req.files);
+        // console.log("--------------------Antes de leer files---------------------------")
+        if (req.files.image) imagesFiles.push({image_name: req.files.image[0].filename, image_num:1})
+        if (req.files.image) imagesFiles.push({image_name: req.files.image[0].filename, image_num:2})
+        if (req.files.image) imagesFiles.push({image_name: req.files.image[0].filename, image_num:3})
+        // console.log(imagesFiles);
+        // console.log("--------------------Voy a bulkEdit--------------------------------")
+        // console.log(await imageController.bulkEdit(propertyId, imagesFiles));
+        let imagesNew = await imageController.bulkEdit(productId, imagesFiles);
+
+        let user = req.session.userLogged;
+        let producto = await Product.findByPk(productId, 
+            {include:['image']});
+        if (producto) {
+          res.render('productDesc', {producto});  
+        }
+        
+        
+    },
+    deleteProduct: async (req, res) => {
+
+        let deletedProduct = await Products.destroy({where: {id : req.params.id}});
+      
+        res.redirect('/')
+    }
+
+    
 }
+
 
 module.exports = productController;

@@ -1,12 +1,9 @@
-// Nivel: ruta
-// Objetivo: Si el usuario esta registrado no permitir ingresar a login o register
-
 function guestMiddleware(req, res, next) {
-    // Primero pregunto si hay algun unsuario en session y lo redirijo a su perfil
-    if (req.session.userLogged) {
+    //console.log(req.session);
+    if (req.session.userLogged && req.session.userLogged.admin != 1) {
         return res.redirect('/profile');
     }
     next();
-};
+}
 
 module.exports = guestMiddleware;
