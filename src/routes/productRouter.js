@@ -17,12 +17,12 @@ const upload = multer({ storage });
 
 router.get('/create',authMiddleware, controller.create);
 //3. /products/:id (GET) Detalle de un producto particular
-router.get('/:id', authAdmMiddleware, controller.detalleCrud);
+router.get('/:id', controller.detalleCrud);
 //router.delete('/:id', authAdmMiddleware, controladorproduct.delete);
 
 router.get('/cart', controller.cart)
 router.get('/', controller.list);
-router.get('/:id/edit', authMiddleware, controller.edit);
+router.get('/edit/:id', authMiddleware, controller.edit);
 
 router.put('/edit/:id', upload.fields([{name: 'image'}, {name: 'image'}, {name: 'image'}]), authMiddleware, controller.update);
 

@@ -163,7 +163,7 @@ const imageController = require('./imageController');
 let productController = {
     list: (req, res) => {
         db.Product.findAll(
-            {include:['category', 'user', 'image']}
+            {include:['category', 'user', 'images']}
             
         )
         .then(productos => {
@@ -227,13 +227,13 @@ let productController = {
         
         let user = req.session.userLogged;
         let producto = await Product.findByPk(newProduct.id, 
-            {include:['image', 'category']});
+            {include:['images', 'category']});
         res.render('productDesc', {producto});
    
     },     
     detalleCrud: async (req, res) => {
         let producto = await Product.findByPk(req.params.id, 
-            {include:['image', 'category']});
+            {include:['images', 'category']});
 
         let user = req.session.userLogged;
         
@@ -245,7 +245,7 @@ let productController = {
     },
     edit: async (req, res) => {
         let productId = req.params.id;
-        let product = await Product.findByPk(productId, {include: ['image']});
+        let product = await Product.findByPk(productId, {include: ['images']});
 
 
         if ( product ) {
@@ -276,8 +276,8 @@ let productController = {
         // console.log(req.files);
         // console.log("--------------------Antes de leer files---------------------------")
         if (req.files.image) imagesFiles.push({image_name: req.files.image[0].filename, image_num:1})
-        if (req.files.image) imagesFiles.push({image_name: req.files.image[0].filename, image_num:2})
-        if (req.files.image) imagesFiles.push({image_name: req.files.image[0].filename, image_num:3})
+        //if (req.files.image) imagesFiles.push({image_name: req.files.image[0].filename, image_num:2})
+        //if (req.files.image) imagesFiles.push({image_name: req.files.image[0].filename, image_num:3})
         // console.log(imagesFiles);
         // console.log("--------------------Voy a bulkEdit--------------------------------")
         // console.log(await imageController.bulkEdit(propertyId, imagesFiles));
@@ -285,7 +285,7 @@ let productController = {
 
         let user = req.session.userLogged;
         let producto = await Product.findByPk(productId, 
-            {include:['image']});
+            {include:['images']});
         if (producto) {
           res.render('productDesc', {producto});  
         }
@@ -294,7 +294,7 @@ let productController = {
     },
     deleteProduct: async (req, res) => {
 
-        let deletedProduct = await Products.destroy({where: {id : req.params.id}});
+        let deletedProduct = await Product.destroy({where: {id : req.params.id}});
       
         res.redirect('/')
     }

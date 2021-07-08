@@ -13,30 +13,31 @@
         <!--Showcase del Producto-->
         <section class="productDescription">
             <div class="producto">
-                <p class="nameProd"><%= product.name %></p>
-                <p class="marca"><%= product.brand %></p>
+                <p class="nameProd"><%= producto.name %></p>
+                <p class="marca"><%= producto.brand %></p>
             </div>
+            <% producto.images.forEach( image => { %>
             <div class="fotos">
-                <img src="/images/<%= product.image %>" width="24%" class="principalImg" alt="3">
+                <img src="/images/<%= image.name %>" width="24%" class="principalImg" alt="3">
 
             </div>
-
+            <% });%>
         </section>
         <div class="informa">
-            <p class="precios">$<%= product.price %></p>
+            <p class="precios">$<%= producto.price %></p>
             <p class="adding">Añadir al Carrito <i class="fas fa-cart-plus"> </i> </p>
 
             <p class="estado">NUEVO</p>
             <br>
             <p class="stock">En Stock</p>
             <br>
-            <p class="description"><%= product.description %> </p>
+            <p class="description"><%= producto.description %> </p>
         </div>
     </div>
-    <form class="form is-inline" action="/products/<%= product.id %>?_method=DELETE" method="POST">
+    <form class="form is-inline" action="/products/delete/<%= producto.id %>?_method=DELETE" method="POST">
         <button type="submit" class="button is-danger">Borrar</button>
     </form>
-    <a href="/products/edit/<%= product.id %>" class="button is-success">Editar</a>
+    <a href="/products/edit/<%= producto.id %>" class="button is-success">Editar</a>
 
 
 
