@@ -214,10 +214,8 @@ let productController = {
 
         let imagesFiles = [];
         let nameImage = '';
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 1; i++) {
             if (i==0) nameImage = req.files.image[0] ? req.files.image[0].filename : '.jpg';
-            if (i==1) nameImage = req.files.image[0] ? req.files.image[0].filename : '.jpg';
-            if (i==2) nameImage = req.files.image[0] ? req.files.image[0].filename : '.jpg';
             imagesFiles.push({
                 name: nameImage
             })
@@ -275,7 +273,7 @@ let productController = {
         let imagesFiles = [];
         // console.log(req.files);
         // console.log("--------------------Antes de leer files---------------------------")
-        if (req.files.image) imagesFiles.push({image_name: req.files.image[0].filename, image_num:1})
+        if (req.files.image) imagesFiles.push({name: req.files.image[0].filename, image_num:1})
         //if (req.files.image) imagesFiles.push({image_name: req.files.image[0].filename, image_num:2})
         //if (req.files.image) imagesFiles.push({image_name: req.files.image[0].filename, image_num:3})
         // console.log(imagesFiles);

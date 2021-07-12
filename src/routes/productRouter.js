@@ -8,7 +8,7 @@ const controller = require('../controller/productController');
 
 //Configuración de multer para archivo de producto
 const storage = multer.diskStorage({
-    destination: path.resolve(__dirname, '../../public/img/products'),
+    destination: path.resolve(__dirname, '../../public/images'),
     filename: (req, file, cb) => {
         cb(null, 'img-' + Date.now() + path.extname(file.originalname));
     }
