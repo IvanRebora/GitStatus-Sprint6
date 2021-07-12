@@ -28,6 +28,6 @@ router.put('/edit/:id', upload.fields([{name: 'image'}, {name: 'image'}, {name: 
 
 // router.post('/', upload.single('foto'), productValidate, controladorproduct.store);
 router.post('/store', upload.fields([{name: 'image'}, {name: 'image'}, {name: 'image'}]), controller.store);
-router.delete('/delete/:id', controller.deleteProduct)
+router.delete('/delete/:id', controller.destroy)
 
 module.exports = router;

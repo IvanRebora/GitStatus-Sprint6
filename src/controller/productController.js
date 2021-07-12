@@ -290,12 +290,27 @@ let productController = {
         
         
     },
-    deleteProduct: async (req, res) => {
 
-        let deletedProduct = await Product.destroy({where: {id : req.params.id}});
-      
-        res.redirect('/')
-    }
+    delete: (req,res) => {
+        let productId = req.params.id;
+        Product.findByPk(productId)
+        .then(product => {
+        return res.render(path.resolve(__dirname, '..', 'views',  'deleteProd'), {product})})
+        .catch(error => res.send(error))
+    },
+
+    destroy: async function (req, res) { 
+         let productId = req.params.id;
+        Product.findByPk(productId,
+            {
+                include : ['images']
+            });
+        await Image.destroy({ where: { product_id: productId }, force: true });
+        await Product.destroy({ where: { id: productId }, force: true });
+        return res.redirect('/')
+        .catch(error => res.send(error)) 
+    },
+
 
     
 }
