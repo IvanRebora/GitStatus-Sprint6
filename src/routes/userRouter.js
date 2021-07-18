@@ -15,7 +15,7 @@ const uploadFile = require('../middlewares/multerMiddleware');
 router.get('/register', guestMiddleware, controller.register);
 
 // Procesar el registro
-router.post('/register', uploadFile.single('avatar'), controller.processRegister);
+router.post('/register', uploadFile.single('avatar'), userValidation, controller.processRegister);
 
 // Formulario de login
 router.get('/login', guestMiddleware, controller.login);

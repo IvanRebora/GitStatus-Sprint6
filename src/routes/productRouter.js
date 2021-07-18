@@ -5,6 +5,7 @@ const multer = require('multer');
 const path = require('path');
 const authAdmMiddleware = require('..//middlewares/authAdmMiddleware')
 const controller = require('../controller/productController');
+const productValidation = require('../middlewares/productValidate');
 
 //Configuración de multer para archivo de producto
 const storage = multer.diskStorage({

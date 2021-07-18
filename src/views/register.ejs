@@ -18,7 +18,7 @@
                     <div class="titulo-register">REGISTRATE</div>
                     <div class="ya-tenes"><a href=login> Si ya tienes cuenta ingresa ahora</a></div>
                     <div class="form-control">
-                        <input type="text" name="first_name" id="firt_name" placeholder="Nombre:" required="" class="control" value="<%= locals.oldData ? oldData.first_name : null %>">
+                        <input type="text" name="first_name" id="firt_name" placeholder="Nombre:"  class="control" value="<%= locals.oldData ? oldData.first_name : null %>">
                         <span class="Feedback"></span>
                         <% if(locals.errors && errors.first_name) { %>
                             <div class="text-danger">
@@ -26,7 +26,7 @@
                             </div>
                           <% } %>
                     </div>
-                    <input type="text" name="last_name" id="last_name" placeholder="Apellido:" required="" class="control" value="<%= locals.oldData ? oldData.last_name : null %>">
+                    <input type="text" name="last_name" id="last_name" placeholder="Apellido:"  class="control" value="<%= locals.oldData ? oldData.last_name : null %>">
                     <span class="Feedback"></span>
                     <% if(locals.errors && errors.last_name) { %>
                         <div class="text-danger">
@@ -35,7 +35,7 @@
                       <% } %>
                 </div>
                     <div class="form-control">
-                        <input type="text" name="email" id="email" placeholder="Correo electrónico:" required="" class="control" value="<%= locals.oldData ? oldData.email : null %>">
+                        <input type="text" name="email" id="email" placeholder="Correo electrónico:" class="control" value="<%= locals.oldData ? oldData.email : null %>">
                         <span class="Feedback"></span>
                         <% if(locals.errors && errors.email) { %>
                             <div class="text-danger">
@@ -81,7 +81,7 @@
                           <% } %>
                     </div>
                     <div class="form-control">
-                        <input type="password" name="password" id="password" placeholder="Contraseña:" class="control" required="">
+                        <input type="password" name="password" id="password" placeholder="Contraseña:" class="control" >
                         <% if(locals.errors && errors.password) { %>
                             <div class="text-danger">
                               <%= errors.password.msg %> 
@@ -89,7 +89,7 @@
                           <% } %>
                     </div>
                     <div class="form-control">
-                        <input type="password" name="confirmpass" id="confirmpass" placeholder="Confirmar contraseña:" class="control" required="">
+                        <input type="password" name="confirmpass" id="confirmpass" placeholder="Confirmar contraseña:" class="control" >
                         <% if(locals.errors && errors.confirmpass) { %>
                             <div class="text-danger">
                               <%= errors.confirmpass.msg %> 
@@ -109,7 +109,7 @@
     <%- include('partials/footer') %>
 
 
-
+<script src="/js/validacionRegister.js"></script>
 </body>
 
 </html>
