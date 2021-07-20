@@ -28,7 +28,7 @@ router.get('/edit/:id', authMiddleware, controller.edit);
 router.put('/edit/:id', upload.fields([{name: 'image'}, {name: 'image'}, {name: 'image'}]), authMiddleware, controller.update);
 
 // router.post('/', upload.single('foto'), productValidate, controladorproduct.store);
-router.post('/store', upload.fields([{name: 'image'}, {name: 'image'}, {name: 'image'}]), controller.store);
+router.post('/store', productValidation, upload.fields([{name: 'image'}, {name: 'image'}, {name: 'image'}]), controller.store);
 router.delete('/delete/:id', controller.destroy)
 
 module.exports = router;
