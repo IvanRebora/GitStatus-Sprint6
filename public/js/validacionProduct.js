@@ -5,6 +5,7 @@ window.addEventListener('load', function(){
    
     let name = document.querySelector('#name');
     let description = document.querySelector('#description');
+    let brand = document.querySelector('#brand');
     let image = document.querySelector('#image');
     let errors = {};
     name.addEventListener('blur', () =>{
@@ -20,6 +21,9 @@ window.addEventListener('load', function(){
             feedbackElement.innerText = feedback
             errors.name = feedback;
         }
+        else {
+            feedbackElement.innerText = '';
+        }
    })
       description.addEventListener('blur', () =>{
         let feedback = ''; 
@@ -31,9 +35,27 @@ window.addEventListener('load', function(){
             feedbackElement.innerText = feedback
             errors.description = feedback;
         }
+        else {
+            feedbackElement.innerText = '';
+        }
       })
+      brand.addEventListener('blur', () =>{
+        let feedback = ''; 
+        let feedbackElement = brand.nextElementSibling;
+       if(brand.value == ""){
+           feedback= "La marca no puede estar vacía"
+           }
 
-      image.addEventListener('blur', () =>{
+           if (feedback) {
+            feedbackElement.innerText = feedback
+            errors.brand = feedback;
+        }
+        else {
+            feedbackElement.innerText = '';
+        }
+   })
+
+      /*image.addEventListener('blur', () =>{
         let feedback = ''; 
         let feedbackElement = image.nextElementSibling;
           if(image){
@@ -50,24 +72,36 @@ window.addEventListener('load', function(){
                 feedbackElement.innerText = feedback
                 errors.image = feedback;
             }
-              
+            else {
+                feedbackElement.innerText = '';
+            }
           }
-      })
+      })*/
         
         
-      form.addEventListener('submit', (e) => {
+      formulario.addEventListener('submit', (e) => {
+
+        if (Object.keys(errors).length > 0) {
+            e.preventDefault();
+            }
+            if (name.value.trim() == ""){
+                e.preventDefault();
+                feedback = 'El nombre no puede quedar vacío'
+                name.nextElementSibling.innerText = feedback;
+           }
+           if (brand.value.trim() == ""){
+            e.preventDefault();
+            feedback = 'La marca no puede quedar vacía'
+            brand.nextElementSibling.innerText = feedback;
+       }
+       if (description.value.trim() == ""){
+        e.preventDefault();
+        feedback = 'La descripcion no puede quedar vacía'
+        description.nextElementSibling.innerText = feedback;
+   }
 
 
-        if (name.value == ''){
-            errors.push('Complete el nombre');
-            address.classList.add('is-invalida');
-        }
-        if (description.value == ''){
-            errors.push('Debe tener minimo 20 caracteres');
-        }
-
-
-        if (errors.length > 0){
+       /* if (errors.length > 0){
             e.preventDefault();
             let ulErrors = document.querySelector('.errores');
             ulErrors.innerHTML = '';
@@ -76,8 +110,8 @@ window.addEventListener('load', function(){
             };
             
         } else {
-            form.submit();
-        }
+            formulario.submit();
+        }*/
     });
    
     })

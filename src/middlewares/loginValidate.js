@@ -10,12 +10,7 @@ body('email').isEmail().withMessage('Debe ingresar un E-mail')
             email : req.body.email
         }
     })
-    if(existe){
-        throw new Error ('Este email ya está registrado')
-    } else{
-        return true;
-    }
-    return true;
+
 }),
 body('password').isLength({min:8}).withMessage('Elegir una pasword de 8 caracteres mínimo')
 ]

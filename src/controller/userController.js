@@ -51,7 +51,15 @@ login: (req, res) => {
 }, 
 
 loginProcess: async (req, res) => {
-        
+    const resulValidation = validationResult (req);
+    console.log(req.body);
+    if (resulValidation.errors.length > 0 ){
+        return res.render ('login',{
+        errors: resulValidation.mapped(),
+        oldData: req.body,
+    
+});
+}
         let userToLogin = await User.findOne({
             where: {
                 email : req.body.email
@@ -72,23 +80,23 @@ loginProcess: async (req, res) => {
                 
                 return res.redirect('/profile')
             }
-            return res.render( "login", {
+            return res.render( "login"/*, {
                 errors: {
                     email: {
                         msg: "Las credenciales son inválidas"
                     }
                 }
-            })
+            }*/)
         }
 
 
-         return res.render( "login", {
+         return res.render( "login"/*, {
             errors: {
                 email: {
                     msg: "No esta registrado este mail"
                 }
             }
-        })
+        }*/)
     },
     edit: async (req, res)=> {
         let user = await User.findByPk(req.session.userLogged.id);
