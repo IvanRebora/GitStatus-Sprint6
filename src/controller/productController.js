@@ -211,7 +211,15 @@ let productController = {
             categories_id: req.body.category
         });
 
-
+        /*let images = await db.Image.create({
+            file: req.file.filename,
+            product_id: newProduct.id,
+          }).catch((error) => {
+            // console.log(productCreated);
+            console.log(error);
+          });
+          // console.log(req.file);*/
+      
         let imagesFiles = [];
         let nameImage = '';
         for (let i = 0; i < 1; i++) {

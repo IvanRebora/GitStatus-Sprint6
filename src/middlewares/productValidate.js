@@ -1,4 +1,4 @@
-const path = require('path');
+/*const path = require('path');
 const {body} = require ('express-validator');
 const {User} = require('../database/models');
 
@@ -20,4 +20,28 @@ const productValidate = [
     }).bail()
        
 ]
-module.exports = productValidate;
+module.exports = productValidate;*/
+
+const path = require('path')
+const { body } = require('express-validator')
+const validations = [
+    body('name').notEmpty().withMessage('Este campo no puede estar vacío').bail()
+    .isLength({ min: 5 }).withMessage('Elegir un nombre de 5 caracteres mínimo'),
+    body('description').notEmpty().withMessage('Este campo no puede estar vacío').bail()
+    .isLength({ min: 20 }).withMessage('Escribir mínimo 20 caracteres'),
+    body('brand').notEmpty().withMessage('Debe ingresar una marca').bail(),
+    body('image').custom((value, { req }) => {
+        let file = req.file
+        let acceptedExtentions = ['.jpg','.jpeg','.png','.gif']
+        if(!file){
+            throw new Error('Tienes que subir una imágen')
+        }else{
+            let fileExtention = path.extname(file.originalname)
+            if(!acceptedExtentions.includes(fileExtention)){
+                throw new Error(`Las extensiones permitidas son ${acceptedExtentions.join(', ')}`)
+            }
+        }
+        return true
+    })
+]
+module.exports = validations

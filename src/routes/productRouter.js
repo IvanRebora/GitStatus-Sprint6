@@ -7,6 +7,7 @@ const authAdmMiddleware = require('..//middlewares/authAdmMiddleware')
 const controller = require('../controller/productController');
 const productValidation = require('../middlewares/productValidate');
 
+
 //Configuración de multer para archivo de producto
 const storage = multer.diskStorage({
     destination: path.resolve(__dirname, '../../public/images'),
@@ -28,7 +29,7 @@ router.get('/edit/:id', authMiddleware, controller.edit);
 router.put('/edit/:id', upload.fields([{name: 'image'}, {name: 'image'}, {name: 'image'}]), authMiddleware, controller.update);
 
 // router.post('/', upload.single('foto'), productValidate, controladorproduct.store);
-router.post('/store',  upload.fields([{name: 'image'}, {name: 'image'}, {name: 'image'}]), controller.store);
+router.post('/store', upload.fields([{name: 'image'}, {name: 'image'}, {name: 'image'}]), controller.store);
 router.delete('/delete/:id', controller.destroy)
 
 module.exports = router;
