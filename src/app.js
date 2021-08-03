@@ -57,10 +57,12 @@ app.use('/api/users', userApiRouter);
 
 app.use('/api/products', productApiRouter);
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
 	res.status(404).send('<h1>404: Not Found</h1>')
-});
-
+});*/
+app.use((req, res, next) => {
+    res.status(404).render('error404')
+})
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
     console.log('Servidor corriendo en el puerto' + PORT)

@@ -97,9 +97,13 @@ const productApiController = {
                 }
                 res.json(respuesta);
             })
-            .catch( err => {
-                res.send({ err: 'Not found' });
-            });
+            .catch(error => {
+                res.json({
+                    meta:{
+                        status: 500,
+                        message: error
+                    }
+                })})
     },
     count: async (req, res) =>{
         try{ 
