@@ -41,7 +41,7 @@ tag {
 }
 
 .logo {
-    width: 10%;
+    width: 25%;
     text-align: center;
 }
 
@@ -50,16 +50,11 @@ tag {
 
 .categorias {
     background-color: #ebebee;
-    padding-bottom: 5%;
     border-top: solid 4px rgba(104, 0, 117, 1)
 }
 
 .categorias ul {
     text-align: center;
-    display: flex;
-    text-align: center;
-    align-items: flex-end;
-    justify-content: space-evenly;
 }
 
 .categorias ul li {
@@ -102,7 +97,6 @@ tag {
     outline: none;
     color: #680075;
     margin: 0;
-    padding: top 3%;
     background-color: transparent;
 }
 
@@ -126,7 +120,6 @@ tag {
     text-decoration: none;
     border-top: solid 4px #680075;
     padding: 20px 36px;
-    
 }
 
 .subnav-content a:hover {
