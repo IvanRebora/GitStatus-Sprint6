@@ -33,9 +33,13 @@ const userApiController = {
             });
             return res.json(respuesta);
         })
-        .catch( err => {
-            res.send({ err: 'Not found' });
-        });
+        .catch(error => {
+            res.json({
+                meta:{
+                    status: 500,
+                    message: error
+                }
+            })})
     },
     detail: (req, res) =>{
         console.log('entre a la api de detalle de usuario')
@@ -63,9 +67,13 @@ const userApiController = {
                 }
                 res.json(respuesta);
             })
-            .catch( err => {
-                res.send({ err: 'Not found' });
-            });
+            .catch(error => {
+                res.json({
+                    meta:{
+                        status: 500,
+                        message: error
+                    }
+                })})
     },
     
     count: (req, res) =>{

@@ -62,8 +62,9 @@ const productApiController = {
                 });
                 res.json(respuesta);
             }
-            catch(error){
-                res.send({ err: 'Not found' });
+            catch (error) {res.status (500).json ({
+                status:  500,
+                message: error});
             }
        } /*else {
             pagination(req, res);
@@ -127,8 +128,9 @@ const productApiController = {
             }
             res.json("El total de productos es: " + respuesta.meta.total);
         }
-        catch(error){
-            res.send({ err: 'Not found' });
+        catch (error) {res.status (500).json ({
+            status:  500,
+            message: error});
         }
     },
     latest: (req, res) =>{
