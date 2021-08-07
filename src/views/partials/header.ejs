@@ -3,15 +3,16 @@
     <!--LOGO-->
     <div class="top-header">
 
-        
     </div>
     <!--LOGO-->
     <nav>
         <nav class="categorias" alt="Categorias">
+            
+            <img src="/images/logo.png" width="15%" class="logo" href="./">
             <ul>
-                <img src="/images/logo.png" width="20%" class="logo" href="./">
+
+
                 <li id="categ">
-                    
 
                     <div class="subnav">
                         <button class="subnavbtn">Categorías <i class="fa fa-caret-down"></i></button>
@@ -35,8 +36,9 @@
                 </li>
 
                 <% if (locals.isLogged) { %>
-                    <li><a href="/profile">Hola <%= locals.userLogged.first_name %>!</a></li><br>
-                    <img src="/images/avatars/<%= locals.userLogged.avatar %>" alt="Imagen de usuario" width="30px" height="30px">
+                   
+                    <li>  <img src="/images/avatars/<%= locals.userLogged.avatar %>" alt="Imagen de usuario" width="30px" height="30px"> <a href="/profile">Hola <%= locals.userLogged.first_name %>!</a></li><br>
+                    
                     <li>
 
                         <a href="/products/create">
