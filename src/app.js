@@ -3,7 +3,7 @@ const app = express();
 const path = require('path');
 const cookies = require('cookie-parser');
 const session = require('express-session');
-
+const cors = require('cors');
 
 const publicPath = path.resolve(__dirname, './public') ;
 const puerto= process.env.PORT;
@@ -18,6 +18,7 @@ const productRouter = require ('./routes/productRouter');
 const userRouter = require ('./routes/userRouter');
 const userApiRouter = require('./routes/api/userApiRouter')
 const productApiRouter = require('./routes/api/productApiRouter')
+const categoryApiRouter = require("./routes/api/categoryApiRouter");
 
 //Para que llegue la información por body
 app.use(express.urlencoded({ extended: false }));
@@ -31,7 +32,7 @@ app.set('view engine', 'ejs');
 const methodOverride = require ('method-override');
 //Aquí estoy disponiendo la posibilidad para utilizar el seteo en los formularios para el usod e los metodos put ó delete
 app.use(methodOverride('_method'));
-
+app.use(cors());
 //app.use(express.static(path.resolve(__dirname, '../public')));
 app.use(express.static('public'));
 
@@ -56,6 +57,8 @@ app.use('/products', productRouter);
 app.use('/api/users', userApiRouter);
 
 app.use('/api/products', productApiRouter);
+
+app.use('/api/categories', categoryApiRouter);
 
 /*app.use((req, res, next) => {
 	res.status(404).send('<h1>404: Not Found</h1>')

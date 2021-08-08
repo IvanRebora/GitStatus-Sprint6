@@ -24,25 +24,25 @@ const productApiController = {
                       "category", "images"
                     ]
                 });
-            /*    let categories = await Category.findAll({
+                let categories = await Category.findAll({
                     include: [
                         'products'
                     ]
                 });
           
                 //Cuento los productos por categoría
-            /*    let countByCategory = {
+                let countByCategory = {
                     videojuegos: categories[0].products.length || 0,
                     cine: categories[1].products.length || 0,
                     comics: categories[2].products.length || 0
-                }*/
+                }
                 
                 // API que reemplaza a la funcion normal
                 let respuesta = {
                     meta: {
                         status : 200,
                         total: products.length,
-                       // countByCategory: countByCategory,
+                        countByCategory: countByCategory,
                         url: 'api/products'
                     },
                     data: []
@@ -55,8 +55,8 @@ const productApiController = {
                         description: product.description,
                         brand: product.brand,
                         price: product.price,
-                       // category: product.category.name,
-                        //images: product.images,
+                        category: product.category.name,
+                        images: product.images.name,
                         details: `/api/products/${product.id}`
                     })
                 });
