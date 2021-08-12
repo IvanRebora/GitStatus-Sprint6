@@ -26,6 +26,7 @@
                             </div>
                           <% } %>
                     </div>
+                    <br>
                     <input type="text" name="last_name" id="last_name" placeholder="Apellido:"  class="control" value="<%= locals.oldData ? oldData.last_name : null %>">
                     <span class="Feedback"></span>
                     <% if(locals.errors && errors.last_name) { %>
