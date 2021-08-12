@@ -1,7 +1,6 @@
 const path = require('path');
 let db = require('../../database/models');
 const sequelize = db.sequelize;
-
 //Aqui tienen otra forma de llamar a cada uno de los modelos
 const User = db.User;
 
@@ -11,35 +10,40 @@ const User = db.User;
 const userApiController = {
 
     list: (req, res) => {
-        User.findAll({ attributes:['id', 'first_name', 'last_name','email']})
-        .then(users => {
-            let respuesta = {
-                meta: {
-                    status : 200,
-                    total: users.length,
-                    url: 'api/users'
-                },
-               // data: users
-               data: []
-            }
-            users.forEach(user => {
-                respuesta.data.push({
-                    id: user.id,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    email: user.email,
-                    detail: `/api/users/${user.id}`
-                })
-            });
-            return res.json(respuesta);
-        })
-        .catch(error => {
-            res.json({
-                meta:{
-                    status: 500,
-                    message: error
+        if ( !req.query.query ) {
+            let users = User.findAll({ attributes:['id', 'first_name', 'last_name','email']})
+            .then(users => {
+                let response = {
+                    meta: {
+                        status : 200,
+                        total: users.length,
+                        url: 'api/users'
+                    },
+                   // data: users
+                   data: {
+                    list: []
                 }
-            })})
+                }
+                users.forEach(user => {
+                    response.data.list.push({
+                        id: user.id,
+                        first_name: user.first_name,
+                        last_name: user.last_name,
+                        email: user.email,
+                        detail: `/api/users/${user.id}`
+                    })
+                    return user
+                });
+                return res.json(response);
+            })
+            .catch(error => {
+                res.json({
+                    meta:{
+                        status: 500,
+                        message: error
+                    }
+                })})
+        }
     },
     detail: (req, res) =>{
         console.log('entre a la api de detalle de usuario')

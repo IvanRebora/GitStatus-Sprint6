@@ -4,6 +4,7 @@ const sequelize = db.sequelize;
 
 const imagesController = require('../imageController');
 
+
 //Aqui tienen otra forma de llamar a cada uno de los modelos
 const Product = db.Product;
 const Category = db.Category;
@@ -55,6 +56,7 @@ const productApiController = {
                         description: product.description,
                         brand: product.brand,
                         price: product.price,
+                        discount: product.discount,
                         category: product.category.name,
                         images: product.images.name,
                         details: `/api/products/${product.id}`
@@ -66,9 +68,7 @@ const productApiController = {
                 status:  500,
                 message: error});
             }
-       } /*else {
-            pagination(req, res);
-        }*/
+       } 
     },
 
     detail: (req, res) =>{
@@ -88,8 +88,9 @@ const productApiController = {
                     },
                     data: {
                     id: product.id,
-                   // category: product.category.name,
+                    //category: product.category.name,
                     name: product.name,
+                    discount: product.discount,
                     description: product.description,
                     brand: product.brand,
                     price: product.price,
@@ -154,6 +155,7 @@ const productApiController = {
         id: product.id,
         category: product.category.name,
         name: product.name,
+        discount: product.discount,
         description: product.description,
         brand: product.brand,
         price: product.price,
